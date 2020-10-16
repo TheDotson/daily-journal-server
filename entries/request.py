@@ -15,7 +15,7 @@ def get_all_entries():
           e.entry,
           e.date,
           e.moodId
-        FROM Entries e
+        FROM JournalEntries e
         """)
 
         entries = []
@@ -38,7 +38,7 @@ def get_single_entry(id):
           e.entry,
           e.date,
           e.moodId
-        FROM Entries e
+        FROM JournalEntries e
         WHERE e.id = ?
         """, ( id, ))
 
