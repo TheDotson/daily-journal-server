@@ -1,48 +1,62 @@
 import sqlite3
 import json
-from models.mood import Mood
+from models import Mood
+
 
 def get_all_moods():
-    with sqlite3.connect("./dailyjournal.db") as conn:
-
+    with sqlite3.connect('./dailyjournal.db') as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
         SELECT
-            a.id,
-            a.label
-        FROM moods a
+            m.id,
+            m.label
+        FROM moods m
         """)
 
         moods = []
 
         dataset = db_cursor.fetchall()
 
-
         for row in dataset:
-
             mood = Mood(row['id'], row['label'])
 
             moods.append(mood.__dict__)
 
     return json.dumps(moods)
 
+
 def get_single_mood(id):
-    with sqlite3.connect("./dailyjournal.db") as conn:
+    with sqlite3.connect('./dailyjournal.db') as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
         SELECT
-            a.id,
-            a.label
-        FROM moods a
-        WHERE a.id = ?
-        """, ( id, ))
+            m.id,
+            m.label
+        FROM moods m
+        WHERE m.id = ?
+        """, (id, ))
 
-        data = db_cursor.fetchone()
+        moods = []
 
-        mood = Mood(data['id'], data['label'])
+        dataset = db_cursor.fetchall()
 
-        return json.dumps(mood.__dict__)
+        for row in dataset:
+            mood = Mood(row['id'], row['label'])
+
+            moods.append(mood.__dict__)
+
+    return json.dumps(moods)
+
+
+def delete_mood(id):
+    with sqlite3.connect('./dailyjournal.db') as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM moods
+        WHERE id = ?
+        """, (id, ))

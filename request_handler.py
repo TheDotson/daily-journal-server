@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from entries import get_all_entries, get_single_entry, delete_entry, get_entries_by_search
-from moods import get_all_moods, get_single_mood
+from entries import get_all_entries, get_single_entry, delete_entry, get_entries_by_search, create_journal_entry
+from moods import get_all_moods, get_single_mood, delete_mood
 
 # Here's a class. It inherits from another class.
 class HandleRequests(BaseHTTPRequestHandler):
@@ -78,21 +78,12 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         elif len(parsed) == 3:
             (resource, key, value) = parsed
+
             if key == "q" and resource == "entries":
-                response = get_entries_by_search(value)
-
-            # Is the resource `customers` and was there a
-            # query parameter that specified the customer
-            # email as a filtering value?
-
-            # if key == "email" and resource == "customers":
-            #     response = get_customers_by_email(value)
-            # if key == "location_id" and resource == "animals":
-            #     response = get_animals_by_location(value)
-            # if key == 'status' and resource == 'animals':
-            #     response = get_animals_by_status(value)
-            # if key == "location_id" and resource == "employees":
-            #     response = get_employees_by_location(value)
+                if value:
+                    response = get_entries_by_search(value)
+                else:
+                    response = get_all_entries()
 
         self.wfile.write(response.encode())
 
@@ -111,6 +102,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         (resource, id) = self.parse_url(self.path)
 
         # Initialize new animal
+        new_entry = None
+
+        if resource == 'entries':
+            new_entry = create_journal_entry(post_body)
+            self.wfile.write(f"{new_entry}".encode())
 
         # Add a new animal to the list. Don't worry about
         # the orange squiggle, you'll define the create_anmial
