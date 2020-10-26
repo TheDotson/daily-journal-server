@@ -1,2 +1,3 @@
 dailyjournal.db
 .vscode
+*.session.sql
