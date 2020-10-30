@@ -35,3 +35,30 @@ INSERT INTO JournalEntries VALUES (null, '678', 'Now Deleting', 1598557373697, 4
             ON e.moodId = m.id
 
 SELECT * from JournalEntries
+
+CREATE TABLE tags (
+  `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  `name` TEXT NOT NULL
+);
+
+CREATE TABLE entry_tag (
+  `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  entry_id REFERENCES JournalEntries(id),
+  tag_id REFERENCES tags(id)
+);
+
+CREATE TABLE entry_tag (
+    'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    'entry_id' INTEGER NOT NULL, 
+    'tag_id' INTEGER NOT NULL,
+    FOREIGN KEY('entry_id') REFERENCES 'JournalEntries'(id),
+    FOREIGN KEY('tag_id') REFERENCES 'tags'(id)
+)
+
+INSERT INTO tags VALUES(1, "Wow");
+INSERT INTO tags VALUES(2, "Ugh");
+INSERT INTO tags VALUES(3, "Really?");
+INSERT INTO tags VALUES(4, "Yikes");
+
+DROP TABLE entry_tag
+SELECT * FROM entry_tag
