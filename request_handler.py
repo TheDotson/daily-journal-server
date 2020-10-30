@@ -2,6 +2,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from entries import get_all_entries, get_single_entry, delete_entry, get_entries_by_search, create_journal_entry, update_entry
 from moods import get_all_moods, get_single_mood, delete_mood
+from tags import get_all_tags
 
 # Here's a class. It inherits from another class.
 class HandleRequests(BaseHTTPRequestHandler):
@@ -67,6 +68,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = f"{get_single_mood(id)}"
                 else:
                     response = f"{get_all_moods()}"
+            elif resource == "tags":
+                if id is not None:
+                    response = ""
+                else:
+                    response = f"{get_all_tags()}"
 
         elif len(parsed) == 3:
             (resource, key, value) = parsed

@@ -47,18 +47,17 @@ CREATE TABLE entry_tag (
   tag_id REFERENCES tags(id)
 );
 
-CREATE TABLE entry_tag (
-    'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    'entry_id' INTEGER NOT NULL, 
-    'tag_id' INTEGER NOT NULL,
-    FOREIGN KEY('entry_id') REFERENCES 'JournalEntries'(id),
-    FOREIGN KEY('tag_id') REFERENCES 'tags'(id)
-)
-
 INSERT INTO tags VALUES(1, "Wow");
 INSERT INTO tags VALUES(2, "Ugh");
 INSERT INTO tags VALUES(3, "Really?");
 INSERT INTO tags VALUES(4, "Yikes");
+
+INSERT INTO entry_tag VALUES (null, 1, 1);
+INSERT INTO entry_tag VALUES (null, 2, 2);
+INSERT INTO entry_tag VALUES (null, 3, 3);
+INSERT INTO entry_tag VALUES (null, 4, 4);
+INSERT INTO entry_tag VALUES (null, 5, 3);
+
 
 DROP TABLE entry_tag
 SELECT * FROM entry_tag
