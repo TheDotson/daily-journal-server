@@ -1,11 +1,10 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from entries import get_all_entries, get_single_entry, delete_entry, get_entries_by_search, create_journal_entry
+from entries import get_all_entries, get_single_entry, delete_entry, get_entries_by_search, create_journal_entry, update_entry
 from moods import get_all_moods, get_single_mood, delete_mood
 
 # Here's a class. It inherits from another class.
 class HandleRequests(BaseHTTPRequestHandler):
-
     def parse_url(self, path):
         path_params = path.split("/")
         resource = path_params[1]
@@ -54,9 +53,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse URL and store entire tuple in a variable
         parsed = self.parse_url(self.path)
 
-        # Response from parse_url() is a tuple with 2
-        # items in it, which means the request was for
-        # `/animals` or `/animals/2`
         if len(parsed) == 2:
             (resource, id) = parsed
 
@@ -72,13 +68,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     response = f"{get_all_moods()}"
 
-        # Response from parse_url() is a tuple with 3
-        # items in it, which means the request was for
-        # `/resource?parameter=value`
-
         elif len(parsed) == 3:
             (resource, key, value) = parsed
-
             if key == "q" and resource == "entries":
                 if value:
                     response = get_entries_by_search(value)
@@ -118,7 +109,6 @@ class HandleRequests(BaseHTTPRequestHandler):
     # It handles any PUT request.
 
     def do_PUT(self):
-        self._set_headers(204)
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
@@ -126,9 +116,16 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Delete a single animal from the list
+        success = False
 
-        # Encode the new animal and send in response
+        if resource == "entries":
+            success = update_entry(id, post_body)
+
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+
         self.wfile.write("".encode())
 
     def do_DELETE(self):
